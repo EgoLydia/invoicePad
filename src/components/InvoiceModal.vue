@@ -141,3 +141,34 @@ import { auth, db } from '../firebase/fbInit'
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import Loading from './Loading.vue';
 import { useRoute } from 'vue-router';
+
+const invoiceStore = useInvoiceStore()
+
+const route = useRoute()
+const loading = ref(false);
+
+const inputData = ref<InvoiceData>(
+    {
+        docId: null,
+        billerStreetAddress: null,
+        billerCity: null,
+        billerZipCode: null,
+        billerCountry: null,
+        clientName: null,
+        clientEmail: null,
+        clientStreetAddress: null,
+        clientCity: null,
+        clientZipCode: null,
+        clientCountry: null,
+        invoiceDateUnix: 0,
+        invoiceDate: '',
+        paymentTerms: '',
+        paymentDueDateUnix: 0,
+        paymentDueDate: '',
+        productDescription: null,
+        invoicePending: false,
+        invoiceDraft: false,
+        invoiceItemList: [],
+        invoiceTotal: 0,
+    }
+);
