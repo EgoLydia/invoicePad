@@ -132,6 +132,7 @@
         </form>
     </div>
 </template>
+
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { InvoiceData } from '../data'
@@ -172,6 +173,7 @@ const inputData = ref<InvoiceData>(
         invoiceTotal: 0,
     }
 );
+
 const dateOptions = ref({ year: "numeric", month: "short", day: "numeric" });
 
 const invoiceWrap = ref(null)
@@ -181,6 +183,7 @@ const checkClick = (event: Event) => {
         invoiceStore.isModalActive = !invoiceStore.isModalActive
     }
 }
+
 const calcInvoiceTotal = () => {
     inputData.value.invoiceTotal = 0;
     inputData.value.invoiceItemList.forEach(item => {
@@ -271,6 +274,21 @@ const updateInvoice = async () => {
 
     invoiceStore.updateInvoice(data)
 }
+
+const submitForm = () => {
+    if (invoiceStore.editInvoice) {
+        updateInvoice()
+        return;
+    }
+    uploadInvoice()
+}
+
+const saveDraft = () => {
+    inputData.value.invoiceDraft = true
+}
+const publishInvoice = () => {
+    inputData.value.invoicePending = true
+}
 const closeInvoice = () => {
     invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
     if (invoiceStore.editInvoice) {
@@ -286,6 +304,11 @@ const addNewInvoiceItem = () => {
         total: 0,
     })
 }
+const deleteInvoiceItem = (id: string) => {
+    inputData.value.invoiceItemList = inputData.value.invoiceItemList.filter(item => item.id !== id)
+
+}
+
 onMounted(() => {
     //get current invoice date
     if (!invoiceStore.editInvoice) {
@@ -340,6 +363,9 @@ watch(
     },
     { deep: true }
 )
+
+</script>
+
 <style lang="scss" scoped>
 .invoice-wrap {
     position: fixed;
