@@ -42,6 +42,18 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     errorMessage: "",
     error: false,
   }),
+    async deleteInvoice(payload) {
+      this.invoicesData = this.invoicesData.filter((invoice: InvoiceData) => {
+        return invoice.docId !== payload;
+      });
+    },
+    async delete(docId) {
+      const noteBy = auth.currentUser?.uid;
+
+      await deleteDoc(doc(db, `invoice ${noteBy}`, docId));
+      this.deleteInvoice(docId);
+    },
+
     async updateStatusToPaid(docId) {
       await updateDoc(doc(db, "invoices", docId), {
         invoicePaid: true,
