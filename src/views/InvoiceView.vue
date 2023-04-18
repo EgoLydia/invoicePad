@@ -106,6 +106,22 @@ const getCurrentInvoice = () => {
         currentInvoice.value = invoiceStore.currentInvoiceArray[0]
 }
 
+const toggleEditInvoice = () => {
+    invoiceStore.editInvoice = !invoiceStore.editInvoice
+    invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
+}
+const deleteInvoice = async (docId: string) => {
+    await invoiceStore.delete(docId)
+    router.push({ name: 'Home' })
+}
+
+const updateStatusToPaid = (docId: string) => {
+    invoiceStore.updateStatusToPaid(docId)
+
+}
+const updateStatusToPending = (docId: string) => {
+    invoiceStore.updateStatusToPending(docId)
+}
 onMounted(() => {
     getCurrentInvoice()
 })
