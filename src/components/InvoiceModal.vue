@@ -188,6 +188,48 @@ const calcInvoiceTotal = () => {
     })
 }
 
+const uploadInvoice = async () => {
+    if (inputData.value.invoiceItemList.length <= 0) {
+        alert('Please ensure you filled out work items')
+        return;
+    }
+
+    loading.value = true
+
+    calcInvoiceTotal();
+
+    const noteBy = auth.currentUser?.uid
+
+    const dataBase = await addDoc(collection(db, `invoice ${noteBy}`), {
+        docId: uid(6),
+        billerStreetAddress: inputData.value.billerStreetAddress,
+        billerCity: inputData.value.billerCity,
+        billerZipCode: inputData.value.billerZipCode,
+        billerCountry: inputData.value.billerCountry,
+        clientName: inputData.value.clientName,
+        clientEmail: inputData.value.clientEmail,
+        clientStreetAddress: inputData.value.clientStreetAddress,
+        clientCity: inputData.value.clientCity,
+        clientZipCode: inputData.value.clientZipCode,
+        clientCountry: inputData.value.clientCountry,
+        invoiceDateUnix: inputData.value.invoiceDateUnix,
+        invoiceDate: inputData.value.invoiceDate,
+        paymentTerms: inputData.value.paymentTerms,
+        paymentDueDateUnix: inputData.value.paymentDueDateUnix,
+        paymentDueDate: inputData.value.paymentDueDate,
+        productDescription: inputData.value.productDescription,
+        invoicePending: inputData.value.invoicePending,
+        invoiceDraft: inputData.value.invoiceDraft,
+        invoiceItemList: inputData.value.invoiceItemList,
+        invoiceTotal: inputData.value.invoiceTotal,
+        invoicePaid: null
+    })
+
+    loading.value = false
+
+    invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
+    invoiceStore.getInvoices()  //consider rewrite
+}
 const closeInvoice = () => {
     invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
     if (invoiceStore.editInvoice) {
