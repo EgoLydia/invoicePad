@@ -42,3 +42,20 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     errorMessage: "",
     error: false,
   }),
+    async updateStatusToPaid(docId) {
+      await updateDoc(doc(db, "invoices", docId), {
+        invoicePaid: true,
+        invoicePending: false,
+      });
+      this.updateStatusForPaid(docId);
+    },
+    async updateStatusToPending(docId) {
+      await updateDoc(doc(db, "invoices", docId), {
+        invoicePaid: false,
+        invoicePending: true,
+        invoiceDraft: false,
+      });
+      this.updateStatusForPending(docId);
+    },
+  },
+});
