@@ -42,6 +42,21 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     errorMessage: "",
     error: false,
   }),
+
+  getters: {},
+
+  actions: {
+    setCurrentInvoice(payload) {
+      this.currentInvoiceArray = this.invoicesData.filter(
+        (invoice: InvoiceData) => {
+          return invoice.docId === payload;
+        }
+      );
+    },
+    setInvoiceData(payload: InvoiceData) {
+      this.invoicesData.push(payload);
+    },
+
     async deleteInvoice(payload) {
       this.invoicesData = this.invoicesData.filter((invoice: InvoiceData) => {
         return invoice.docId !== payload;
