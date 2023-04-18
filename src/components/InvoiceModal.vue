@@ -321,6 +321,18 @@ onMounted(() => {
             inputData.value.invoiceTotal = currentInvoice.invoiceTotal
     }
 
+})
+
+watch(
+    () => inputData.value.paymentTerms,
+    () => {
+        const futureDate = new Date()
+        inputData.value.paymentDueDateUnix = futureDate.setDate(futureDate.getDate()
+            + parseInt(inputData.value.paymentTerms))
+        inputData.value.paymentDueDate = new Date(inputData.value.paymentDueDateUnix).toLocaleDateString('en-US', dateOptions.value)
+    },
+)
+
 watch(
     () => uploadInvoice,
     () => {
