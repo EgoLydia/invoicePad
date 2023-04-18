@@ -132,3 +132,12 @@
         </form>
     </div>
 </template>
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
+import { InvoiceData } from '../data'
+import { useInvoiceStore } from '../stores/index';
+import { uid } from 'uid'
+import { auth, db } from '../firebase/fbInit'
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import Loading from './Loading.vue';
+import { useRoute } from 'vue-router';
