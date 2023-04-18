@@ -88,6 +88,7 @@
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useInvoiceStore } from '../stores/index';
@@ -100,6 +101,7 @@ const router = useRouter()
 const invoiceStore = useInvoiceStore()
 const showSpinner = ref(false)
 const currentInvoice = ref<InvoiceData>()
+
 const getCurrentInvoice = () => {
     invoiceStore.setCurrentInvoice(route.params.invoiceId)
     if (invoiceStore.currentInvoiceArray)
@@ -122,9 +124,22 @@ const updateStatusToPaid = (docId: string) => {
 const updateStatusToPending = (docId: string) => {
     invoiceStore.updateStatusToPending(docId)
 }
+
 onMounted(() => {
     getCurrentInvoice()
 })
+watch(
+    () => invoiceStore.editInvoice,
+    () => {
+        if (!invoiceStore.editInvoice) {
+            if (invoiceStore.currentInvoiceArray)
+                currentInvoice.value = invoiceStore.currentInvoiceArray[0]
+        }
+    },
+)
+
+</script>
+
 <style lang="scss" scoped>
 .invoice-view {
     .nav-link {
