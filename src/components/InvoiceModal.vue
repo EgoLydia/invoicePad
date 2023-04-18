@@ -172,3 +172,12 @@ const inputData = ref<InvoiceData>(
         invoiceTotal: 0,
     }
 );
+const dateOptions = ref({ year: "numeric", month: "short", day: "numeric" });
+
+const invoiceWrap = ref(null)
+
+const checkClick = (event: Event) => {
+    if (event.target === invoiceWrap.value) {
+        invoiceStore.isModalActive = !invoiceStore.isModalActive
+    }
+}
