@@ -117,6 +117,14 @@ export const useInvoiceStore = defineStore("invoiceStore", {
       });
       // this.invoicesLoaded = true;
     },
+
+    async updateInvoice({ docId, routeId }) {
+      this.deleteInvoice(docId);
+      await this.getInvoices();
+      this.showInvoiceModal = !this.showInvoiceModal;
+      this.editInvoice = !this.editInvoice;
+      this.setCurrentInvoice(routeId);
+    },
     async delete(docId) {
       const noteBy = auth.currentUser?.uid;
 
