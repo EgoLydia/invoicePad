@@ -21,3 +21,60 @@
         </div>
     </router-link>
 </template>
+
+<script setup lang="ts">
+import { PropType } from 'vue';
+import { InvoiceData } from '../data';
+import { shortenId } from '../composables/helper'
+
+const props = defineProps({
+    invoice: {
+        type: Object as PropType<InvoiceData>,
+        default: []
+    }
+})
+</script>
+
+<style lang="scss" scoped>
+.invoice {
+    text-decoration: none;
+    cursor: pointer;
+    gap: 16px;
+    margin-bottom: 16px;
+    color: #fff;
+    border-radius: 20px;
+    padding: 28px 32px;
+    background-color: #1e2139;
+    align-items: center;
+
+    span {
+        font-size: 13px;
+    }
+
+    .left {
+        align-items: center;
+        flex-basis: 60%;
+        gap: 16px;
+
+        span {
+            flex: 1;
+        }
+
+        .tracking-number {
+            text-transform: uppercase;
+        }
+    }
+
+    .right {
+        gap: 16px;
+        flex-basis: 40%;
+        align-items: center;
+
+        .price {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600px;
+        }
+    }
+}
+</style>
