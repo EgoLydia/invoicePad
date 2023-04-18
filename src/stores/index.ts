@@ -47,6 +47,44 @@ export const useInvoiceStore = defineStore("invoiceStore", {
         return invoice.docId !== payload;
       });
     },
+    async getInvoices() {
+      const noteBy = auth.currentUser?.uid;
+      const getData = await getDocs(collection(db, `invoice ${noteBy}`));
+      getData.forEach((doc) => {
+        if (
+          !this.invoicesData.some(
+            (invoice: InvoiceData) => invoice.docId === doc.id
+          )
+        ) {
+          const data = {
+            docId: doc.id,
+            billerStreetAddress: doc.data().billerStreetAddress,
+            billerCity: doc.data().billerCity,
+            billerZipCode: doc.data().billerZipCode,
+            billerCountry: doc.data().billerCountry,
+            clientName: doc.data().clientName,
+            clientEmail: doc.data().clientEmail,
+            clientStreetAddress: doc.data().clientStreetAddress,
+            clientCity: doc.data().clientCity,
+            clientZipCode: doc.data().clientZipCode,
+            clientCountry: doc.data().clientCountry,
+            invoiceDateUnix: doc.data().invoiceDateUnix,
+            invoiceDate: doc.data().invoiceDate,
+            paymentTerms: doc.data().paymentTerms,
+            paymentDueDateUnix: doc.data().paymentDueDateUnix,
+            paymentDueDate: doc.data().paymentDueDate,
+            productDescription: doc.data().productDescription,
+            invoicePending: doc.data().invoicePending,
+            invoiceDraft: doc.data().invoiceDraft,
+            invoiceItemList: doc.data().invoiceItemList,
+            invoiceTotal: doc.data().invoiceTotal,
+            invoicePaid: doc.data().invoicePaid,
+          };
+          this.setInvoiceData(data);
+        }
+      });
+      // this.invoicesLoaded = true;
+    },
     async delete(docId) {
       const noteBy = auth.currentUser?.uid;
 
