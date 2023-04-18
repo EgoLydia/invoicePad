@@ -181,3 +181,25 @@ const checkClick = (event: Event) => {
         invoiceStore.isModalActive = !invoiceStore.isModalActive
     }
 }
+const calcInvoiceTotal = () => {
+    inputData.value.invoiceTotal = 0;
+    inputData.value.invoiceItemList.forEach(item => {
+        inputData.value.invoiceTotal += item.total
+    })
+}
+
+const closeInvoice = () => {
+    invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
+    if (invoiceStore.editInvoice) {
+        invoiceStore.editInvoice = !invoiceStore.editInvoice
+    }
+}
+const addNewInvoiceItem = () => {
+    inputData.value.invoiceItemList.push({
+        id: uid(),
+        itemName: '',
+        qty: 0,
+        price: 0,
+        total: 0,
+    })
+}
