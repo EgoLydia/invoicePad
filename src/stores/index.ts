@@ -10,6 +10,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { InvoiceData, User } from "../data";
+
 interface State {
   showInvoiceModal: Boolean;
   isModalActive: Boolean;
