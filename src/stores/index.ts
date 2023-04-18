@@ -62,6 +62,23 @@ export const useInvoiceStore = defineStore("invoiceStore", {
         return invoice.docId !== payload;
       });
     },
+    updateStatusForPaid(payload: InvoiceData) {
+      this.invoicesData.forEach((invoice: InvoiceData) => {
+        if (invoice.docId === payload) {
+          (invoice.invoicePending = false), (invoice.invoicePaid = true);
+        }
+      });
+    },
+
+    updateStatusForPending(payload: InvoiceData) {
+      this.invoicesData.forEach((invoice: InvoiceData) => {
+        if (invoice.docId === payload) {
+          (invoice.invoicePending = true), (invoice.invoicePaid = false);
+          invoice.invoiceDraft = false;
+        }
+      });
+    },
+
     async getInvoices() {
       const noteBy = auth.currentUser?.uid;
       const getData = await getDocs(collection(db, `invoice ${noteBy}`));
