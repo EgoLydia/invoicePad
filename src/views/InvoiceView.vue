@@ -88,3 +88,15 @@
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue';
+import { useInvoiceStore } from '../stores/index';
+import { useRoute, useRouter } from 'vue-router';
+import { InvoiceData } from '../data';
+import { shortenId } from '../composables/helper'
+const route = useRoute()
+const router = useRouter()
+
+const invoiceStore = useInvoiceStore()
+const showSpinner = ref(false)
+const currentInvoice = ref<InvoiceData>()
