@@ -100,3 +100,12 @@ const router = useRouter()
 const invoiceStore = useInvoiceStore()
 const showSpinner = ref(false)
 const currentInvoice = ref<InvoiceData>()
+const getCurrentInvoice = () => {
+    invoiceStore.setCurrentInvoice(route.params.invoiceId)
+    if (invoiceStore.currentInvoiceArray)
+        currentInvoice.value = invoiceStore.currentInvoiceArray[0]
+}
+
+onMounted(() => {
+    getCurrentInvoice()
+})
