@@ -230,6 +230,47 @@ const uploadInvoice = async () => {
     invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
     invoiceStore.getInvoices()  //consider rewrite
 }
+
+const updateInvoice = async () => {
+    if (inputData.value.invoiceItemList.length <= 0) {
+        alert('Please ensure you filled out work items')
+        return;
+    }
+
+    loading.value = true
+
+    calcInvoiceTotal()
+
+    const docRefs = doc(db, "invoices", inputData.value.docId)
+
+    const dataBase = await updateDoc(docRefs, {
+        billerStreetAddress: inputData.value.billerStreetAddress,
+        billerCity: inputData.value.billerCity,
+        billerZipCode: inputData.value.billerZipCode,
+        billerCountry: inputData.value.billerCountry,
+        clientName: inputData.value.clientName,
+        clientEmail: inputData.value.clientEmail,
+        clientStreetAddress: inputData.value.clientStreetAddress,
+        clientCity: inputData.value.clientCity,
+        clientZipCode: inputData.value.clientZipCode,
+        clientCountry: inputData.value.clientCountry,
+        paymentTerms: inputData.value.paymentTerms,
+        paymentDueDateUnix: inputData.value.paymentDueDateUnix,
+        paymentDueDate: inputData.value.paymentDueDate,
+        productDescription: inputData.value.productDescription,
+        invoiceItemList: inputData.value.invoiceItemList,
+        invoiceTotal: inputData.value.invoiceTotal,
+    });
+
+    loading.value = false
+
+    const data = {
+        docId: inputData.value.docId,
+        routeId: route.params.invoiceId
+    };
+
+    invoiceStore.updateInvoice(data)
+}
 const closeInvoice = () => {
     invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
     if (invoiceStore.editInvoice) {
@@ -245,3 +286,45 @@ const addNewInvoiceItem = () => {
         total: 0,
     })
 }
+onMounted(() => {
+    //get current invoice date
+    if (!invoiceStore.editInvoice) {
+        inputData.value.invoiceDateUnix = Date.now()
+        inputData.value.invoiceDate = new Date(inputData.value.invoiceDateUnix).toLocaleDateString('en-US', dateOptions.value)
+
+    }
+
+    //populate edit invoice modal
+    if (invoiceStore.editInvoice) {
+        const currentInvoice = invoiceStore.currentInvoiceArray[0]
+
+        inputData.value.docId = currentInvoice.docId,
+            inputData.value.billerStreetAddress = currentInvoice.billerStreetAddress,
+            inputData.value.billerCity = currentInvoice.billerCity,
+            inputData.value.billerZipCode = currentInvoice.billerZipCode,
+            inputData.value.billerCountry = currentInvoice.billerCountry,
+            inputData.value.clientName = currentInvoice.clientName,
+            inputData.value.clientEmail = currentInvoice.clientEmail,
+            inputData.value.clientStreetAddress = currentInvoice.clientStreetAddress,
+            inputData.value.clientCity = currentInvoice.clientCity,
+            inputData.value.clientZipCode = currentInvoice.clientZipCode,
+            inputData.value.clientCountry = currentInvoice.clientCountry,
+            inputData.value.invoiceDateUnix = currentInvoice.invoiceDateUnix,
+            inputData.value.invoiceDate = currentInvoice.invoiceDate,
+            inputData.value.paymentTerms = currentInvoice.paymentTerms,
+            inputData.value.paymentDueDateUnix = currentInvoice.paymentDueDateUnix,
+            inputData.value.paymentDueDate = currentInvoice.paymentDueDate,
+            inputData.value.productDescription = currentInvoice.productDescription,
+            inputData.value.invoicePending = currentInvoice.invoicePending,
+            inputData.value.invoiceDraft = currentInvoice.invoiceDraft,
+            inputData.value.invoiceItemList = currentInvoice.invoiceItemList,
+            inputData.value.invoiceTotal = currentInvoice.invoiceTotal
+    }
+
+watch(
+    () => uploadInvoice,
+    () => {
+        invoiceStore.getInvoices()
+    },
+    { deep: true }
+)
