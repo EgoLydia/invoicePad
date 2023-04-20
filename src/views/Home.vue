@@ -58,6 +58,7 @@ const router = useRouter()
 const logOut = async () => {
     await signOut(auth)
     invoiceStore.isLogin = false
+    invoiceStore.invoicesData = []
     router.push({ name: 'Login' })
 }
 const newInvoice = () => {

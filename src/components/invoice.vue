@@ -1,9 +1,9 @@
 <template>
     <router-link class="invoice flex" :to="{
-        name: 'Invoice', params: { invoiceId: invoice.docId }
+        name: 'Invoice', params: { invoiceId: invoice.id }
     }">
         <div class="left flex">
-            <span class="tracking-number">#{{ shortenId(invoice.docId, 6) }}</span>
+                <span class="tracking-number">#{{ shortenId(invoice.id, 6) }}</span>
             <span class="due-date">{{ invoice.paymentDueDate }}</span>
             <span class="person">{{ invoice.clientName }}</span>
         </div>

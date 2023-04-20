@@ -150,7 +150,8 @@ const loading = ref(false);
 
 const inputData = ref<InvoiceData>(
     {
-        docId: null,
+        id: null,
+        userId: null,
         billerStreetAddress: null,
         billerCity: null,
         billerZipCode: null,
@@ -203,8 +204,9 @@ const uploadInvoice = async () => {
 
     const noteBy = auth.currentUser?.uid
 
-    const dataBase = await addDoc(collection(db, `invoice ${noteBy}`), {
-        docId: uid(6),
+    const dataBase = await addDoc(collection(db, "invoices"), {
+        id: uid(6),
+        userId: noteBy,
         billerStreetAddress: inputData.value.billerStreetAddress,
         billerCity: inputData.value.billerCity,
         billerZipCode: inputData.value.billerZipCode,
@@ -244,7 +246,7 @@ const updateInvoice = async () => {
 
     calcInvoiceTotal()
 
-    const docRefs = doc(db, "invoices", inputData.value.docId)
+    const docRefs = doc(db, "invoices", inputData.value.id)
 
     const dataBase = await updateDoc(docRefs, {
         billerStreetAddress: inputData.value.billerStreetAddress,
@@ -268,7 +270,7 @@ const updateInvoice = async () => {
     loading.value = false
 
     const data = {
-        docId: inputData.value.docId,
+        id: inputData.value.id,
         routeId: route.params.invoiceId
     };
 
@@ -321,7 +323,7 @@ onMounted(() => {
     if (invoiceStore.editInvoice) {
         const currentInvoice = invoiceStore.currentInvoiceArray[0]
 
-        inputData.value.docId = currentInvoice.docId,
+        inputData.value.id = currentInvoice.id,
             inputData.value.billerStreetAddress = currentInvoice.billerStreetAddress,
             inputData.value.billerCity = currentInvoice.billerCity,
             inputData.value.billerZipCode = currentInvoice.billerZipCode,

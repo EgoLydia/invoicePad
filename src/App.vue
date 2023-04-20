@@ -37,10 +37,8 @@ const router = useRouter()
 
 onMounted(() => {
   auth.onAuthStateChanged((user) => {
-    invoiceStore.invoicesLoaded = true
     if (user) {
       invoiceStore.isLogin = true
-      console.log(invoiceStore.user.email);
       invoiceStore.getInvoices()
     } else {
       invoiceStore.isLogin = false

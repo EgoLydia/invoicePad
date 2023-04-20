@@ -50,7 +50,7 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     setCurrentInvoice(payload) {
       this.currentInvoiceArray = this.invoicesData.filter(
         (invoice: InvoiceData) => {
-          return invoice.docId === payload;
+          return invoice.id === payload;
         }
       );
     },
@@ -60,12 +60,12 @@ export const useInvoiceStore = defineStore("invoiceStore", {
 
     async deleteInvoice(payload) {
       this.invoicesData = this.invoicesData.filter((invoice: InvoiceData) => {
-        return invoice.docId !== payload;
+        return invoice.id !== payload;
       });
     },
     updateStatusForPaid(payload: InvoiceData) {
       this.invoicesData.forEach((invoice: InvoiceData) => {
-        if (invoice.docId === payload) {
+        if (invoice.id === payload) {
           (invoice.invoicePending = false), (invoice.invoicePaid = true);
         }
       });
@@ -73,7 +73,7 @@ export const useInvoiceStore = defineStore("invoiceStore", {
 
     updateStatusForPending(payload: InvoiceData) {
       this.invoicesData.forEach((invoice: InvoiceData) => {
-        if (invoice.docId === payload) {
+        if (invoice.id === payload) {
           (invoice.invoicePending = true), (invoice.invoicePaid = false);
           invoice.invoiceDraft = false;
         }
@@ -82,15 +82,11 @@ export const useInvoiceStore = defineStore("invoiceStore", {
 
     async getInvoices() {
       const noteBy = auth.currentUser?.uid;
-      const getData = await getDocs(collection(db, `invoice ${noteBy}`));
+      const getData = await getDocs(collection(db, "invoices"));
       getData.forEach((doc) => {
-        if (
-          !this.invoicesData.some(
-            (invoice: InvoiceData) => invoice.docId === doc.id
-          )
-        ) {
+        if (doc.data().userId === noteBy) {
           const data = {
-            docId: doc.id,
+            id: doc.id,
             billerStreetAddress: doc.data().billerStreetAddress,
             billerCity: doc.data().billerCity,
             billerZipCode: doc.data().billerZipCode,
@@ -116,37 +112,35 @@ export const useInvoiceStore = defineStore("invoiceStore", {
           this.setInvoiceData(data);
         }
       });
-      // this.invoicesLoaded = true;
+      this.invoicesLoaded = true;
     },
 
-    async updateInvoice({ docId, routeId }) {
-      this.deleteInvoice(docId);
+    async updateInvoice({ id, routeId }) {
+      this.deleteInvoice(id);
       await this.getInvoices();
       this.showInvoiceModal = !this.showInvoiceModal;
       this.editInvoice = !this.editInvoice;
       this.setCurrentInvoice(routeId);
     },
-    async delete(docId) {
-      const noteBy = auth.currentUser?.uid;
-
-      await deleteDoc(doc(db, `invoice ${noteBy}`, docId));
-      this.deleteInvoice(docId);
+    async delete(id) {
+      await deleteDoc(doc(db, "invoices", id));
+      this.deleteInvoice(id);
     },
 
-    async updateStatusToPaid(docId) {
-      await updateDoc(doc(db, "invoices", docId), {
+    async updateStatusToPaid(id) {
+      await updateDoc(doc(db, "invoices", id), {
         invoicePaid: true,
         invoicePending: false,
       });
-      this.updateStatusForPaid(docId);
+      this.updateStatusForPaid(id);
     },
-    async updateStatusToPending(docId) {
-      await updateDoc(doc(db, "invoices", docId), {
+    async updateStatusToPending(id) {
+      await updateDoc(doc(db, "invoices", id), {
         invoicePaid: false,
         invoicePending: true,
         invoiceDraft: false,
       });
-      this.updateStatusForPending(docId);
+      this.updateStatusForPending(id);
     },
   },
 });

@@ -18,21 +18,21 @@
             </div>
             <div class="right flex">
                 <button class="dark-purple" @click="toggleEditInvoice">Edit</button>
-                <button class="red" @click="deleteInvoice(currentInvoice?.docId)">Delete</button>
-                <button v-show="currentInvoice?.invoicePending" class="green"
-                    @click="updateStatusToPaid(currentInvoice?.docId)">Mark as Paid
-                </button>
-                <button v-show="currentInvoice?.invoiceDraft || currentInvoice?.invoicePaid" class="orange"
-                    @click="updateStatusToPending(currentInvoice?.docId)">Mark as Pending
-                </button>
+                    <button class="red" @click="deleteInvoice(currentInvoice?.id)">Delete</button>
+                    <button v-show="currentInvoice?.invoicePending" class="green"
+                        @click="updateStatusToPaid(currentInvoice?.id)">Mark as Paid
+                    </button>
+                    <button v-show="currentInvoice?.invoiceDraft || currentInvoice?.invoicePaid" class="orange"
+                        @click="updateStatusToPending(currentInvoice?.id)">Mark as Pending
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- Invoice Details -->
-        <div class="invoice-details flex flex-column">
-            <div class="top flex">
-                <div class="left flex flex-column">
-                    <p><span>#</span>{{ shortenId(currentInvoice?.docId, 6) }}</p>
+            <!-- Invoice Details -->
+            <div class="invoice-details flex flex-column">
+                <div class="top flex">
+                    <div class="left flex flex-column">
+                        <p><span>#</span>{{ shortenId(currentInvoice?.id, 6) }}</p>
                     <p>{{ currentInvoice?.productDescription }}</p>
                 </div>
                 <div class="right flex flex-column">
@@ -99,7 +99,6 @@ const route = useRoute()
 const router = useRouter()
 
 const invoiceStore = useInvoiceStore()
-const showSpinner = ref(false)
 const currentInvoice = ref<InvoiceData>()
 
 const getCurrentInvoice = () => {
@@ -112,17 +111,17 @@ const toggleEditInvoice = () => {
     invoiceStore.editInvoice = !invoiceStore.editInvoice
     invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal
 }
-const deleteInvoice = async (docId: string) => {
-    await invoiceStore.delete(docId)
+const deleteInvoice = async (id: string) => {
+    await invoiceStore.delete(id)
     router.push({ name: 'Home' })
 }
 
-const updateStatusToPaid = (docId: string) => {
-    invoiceStore.updateStatusToPaid(docId)
+const updateStatusToPaid = (id: string) => {
+    invoiceStore.updateStatusToPaid(id)
 
 }
-const updateStatusToPending = (docId: string) => {
-    invoiceStore.updateStatusToPending(docId)
+const updateStatusToPending = (id: string) => {
+    invoiceStore.updateStatusToPending(id)
 }
 
 onMounted(() => {

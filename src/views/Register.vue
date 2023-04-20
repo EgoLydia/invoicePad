@@ -43,7 +43,6 @@ import { useInvoiceStore } from '../stores';
 import { useRouter } from 'vue-router';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth, db } from '../firebase/fbInit'
-import { addDoc, collection, doc } from '@firebase/firestore';
 
 const invoiceStore = useInvoiceStore();
 
@@ -70,7 +69,7 @@ const signUp = async () => {
         console.log(response);
         if (auth.currentUser)
             updateProfile(auth.currentUser, {
-                displayName: user.firstName
+                displayName: user.firstName,
             })
 
         router.push({ name: 'Home' })
