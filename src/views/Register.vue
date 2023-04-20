@@ -6,7 +6,7 @@
                 <router-link class="router-link" :to="{ name: 'Login' }">Login</router-link>
             </p>
             <h2>Send and Keep Track Of Your Invoices </h2>
-            <span>Create an account</span>
+                                    <span>Create an account</span>
             <div class="inputs">
                 <div class="input">
                     <input type="text" placeholder="First Name" v-model="user.firstName" />
@@ -88,6 +88,7 @@ const signUp = async () => {
 .register {
     h2 {
         max-width: 600px;
+        margin-bottom: 10px;
     }
 }
 
@@ -138,7 +139,7 @@ const signUp = async () => {
         }
 
         span {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             color: #fff;
         }
 

@@ -1,80 +1,90 @@
 <template>
-    <router-link class="invoice flex" :to="{
-        name: 'Invoice', params: { invoiceId: invoice.id }
-    }">
+      <router-link
+        class="invoice flex"
+        :to="{
+            name: 'Invoice',
+            params: { invoiceId: invoice.id },
+        }"
+      >
         <div class="left flex">
-                <span class="tracking-number">#{{ shortenId(invoice.id, 6) }}</span>
-            <span class="due-date">{{ invoice.paymentDueDate }}</span>
-            <span class="person">{{ invoice.clientName }}</span>
+          <span class="tracking-number">#{{ shortenId(invoice.id, 6) }}</span>
+          <span class="due-date">{{ invoice.paymentDueDate }}</span>
+          <span class="person">{{ invoice.clientName }}</span>
         </div>
         <div class="right flex">
-            <span class="price">${{ invoice.invoiceTotal }}</span>
-            <div class="status-button flex"
-                :class="{ paid: invoice.invoicePaid, draft: invoice.invoiceDraft, pending: invoice.invoicePending }">
-                <span v-if="invoice.invoicePaid">Paid</span>
-                <span v-if="invoice.invoiceDraft">Draft</span>
-                <span v-if="invoice.invoicePending">Pending</span>
-            </div>
-            <div class="icon">
-                <img src="src\assets\icon-arrow-right.svg" alt="">
-            </div>
+          <span class="price">${{ invoice.invoiceTotal }}</span>
+          <div
+            class="status-button flex"
+            :class="{
+                paid: invoice.invoicePaid,
+                draft: invoice.invoiceDraft,
+                pending: invoice.invoicePending,
+            }"
+          >
+            <span v-if="invoice.invoicePaid">Paid</span>
+            <span v-if="invoice.invoiceDraft">Draft</span>
+            <span v-if="invoice.invoicePending">Pending</span>
+          </div>
+          <div class="icon">
+            <img src="src\assets\icon-arrow-right.svg" alt="" />
+          </div>
         </div>
-    </router-link>
+      </router-link>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { InvoiceData } from '../data';
-import { shortenId } from '../composables/helper'
+import { PropType } from "vue";
+import { InvoiceData } from "../data";
+import { shortenId } from "../composables/helper";
 
 const props = defineProps({
     invoice: {
         type: Object as PropType<InvoiceData>,
-        default: []
-    }
-})
+        default: [],
+    },
+});
 </script>
 
 <style lang="scss" scoped>
 .invoice {
-    text-decoration: none;
-    cursor: pointer;
-    gap: 16px;
-    margin-bottom: 16px;
-    color: #fff;
-    border-radius: 20px;
-    padding: 28px 32px;
-    background-color: #1e2139;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: #fff;
+  border-radius: 20px;
+  padding: 28px 32px;
+  background-color: #1e2139;
+  align-items: center;
+
+  span {
+    font-size: 13px;
+  }
+
+  .left {
     align-items: center;
+    flex-basis: 60%;
+    gap: 16px;
 
     span {
-        font-size: 13px;
+      flex: 1;
     }
 
-    .left {
-        align-items: center;
-        flex-basis: 60%;
-        gap: 16px;
-
-        span {
-            flex: 1;
-        }
-
-        .tracking-number {
-            text-transform: uppercase;
-        }
+    .tracking-number {
+      text-transform: uppercase;
     }
+  }
 
-    .right {
-        gap: 16px;
-        flex-basis: 40%;
-        align-items: center;
+  .right {
+    gap: 16px;
+    flex-basis: 40%;
+    align-items: center;
 
-        .price {
-            flex: 1;
-            font-size: 16px;
-            font-weight: 600px;
-        }
+    .price {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 600px;
     }
+  }
 }
 </style>

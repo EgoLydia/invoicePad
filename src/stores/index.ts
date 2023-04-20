@@ -5,9 +5,7 @@ import {
   getDocs,
   doc,
   deleteDoc,
-  updateDoc,
-  addDoc,
-  getDoc,
+  updateDoc
 } from "firebase/firestore";
 import { InvoiceData, User } from "../data";
 
@@ -43,9 +41,6 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     errorMessage: "",
     error: false,
   }),
-
-  getters: {},
-
   actions: {
     setCurrentInvoice(payload) {
       this.currentInvoiceArray = this.invoicesData.filter(
@@ -54,15 +49,13 @@ export const useInvoiceStore = defineStore("invoiceStore", {
         }
       );
     },
-    setInvoiceData(payload: InvoiceData) {
-      this.invoicesData.push(payload);
-    },
 
     async deleteInvoice(payload) {
       this.invoicesData = this.invoicesData.filter((invoice: InvoiceData) => {
         return invoice.id !== payload;
       });
     },
+
     updateStatusForPaid(payload: InvoiceData) {
       this.invoicesData.forEach((invoice: InvoiceData) => {
         if (invoice.id === payload) {
@@ -83,6 +76,7 @@ export const useInvoiceStore = defineStore("invoiceStore", {
     async getInvoices() {
       const noteBy = auth.currentUser?.uid;
       const getData = await getDocs(collection(db, "invoices"));
+      const invoices = [];
       getData.forEach((doc) => {
         if (doc.data().userId === noteBy) {
           const data = {
@@ -109,7 +103,8 @@ export const useInvoiceStore = defineStore("invoiceStore", {
             invoiceTotal: doc.data().invoiceTotal,
             invoicePaid: doc.data().invoicePaid,
           };
-          this.setInvoiceData(data);
+          invoices.push(data);
+          this.invoicesData = invoices;
         }
       });
       this.invoicesLoaded = true;
@@ -122,6 +117,7 @@ export const useInvoiceStore = defineStore("invoiceStore", {
       this.editInvoice = !this.editInvoice;
       this.setCurrentInvoice(routeId);
     },
+
     async delete(id) {
       await deleteDoc(doc(db, "invoices", id));
       this.deleteInvoice(id);
@@ -134,6 +130,7 @@ export const useInvoiceStore = defineStore("invoiceStore", {
       });
       this.updateStatusForPaid(id);
     },
+
     async updateStatusToPending(id) {
       await updateDoc(doc(db, "invoices", id), {
         invoicePaid: false,
