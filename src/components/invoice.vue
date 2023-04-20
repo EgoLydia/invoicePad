@@ -6,12 +6,12 @@
             params: { invoiceId: invoice.id },
         }"
       >
-        <div class="left flex">
-          <span class="tracking-number">#{{ shortenId(invoice.id, 6) }}</span>
-          <span class="due-date">{{ invoice.paymentDueDate }}</span>
-          <span class="person">{{ invoice.clientName }}</span>
-        </div>
-        <div class="right flex">
+                                        <div class="left">
+                                          <span class="tracking-number">#{{ shortenId(invoice.id, 6) }}</span>
+                                          <span class="due-date">{{ invoice.paymentDueDate }}</span>
+                                          <span class="person">{{ invoice.clientName }}</span>
+                                        </div>
+                                        <div class="right">
           <span class="price">${{ invoice.invoiceTotal }}</span>
           <div
             class="status-button flex"
@@ -63,8 +63,9 @@ const props = defineProps({
 
   .left {
     align-items: center;
-    flex-basis: 60%;
-    gap: 16px;
+    display: flex;
+    flex-basis: 50%;
+    // gap: 2px;
 
     span {
       flex: 1;
@@ -76,8 +77,9 @@ const props = defineProps({
   }
 
   .right {
-    gap: 16px;
-    flex-basis: 40%;
+    // gap: 2px;
+    flex-basis: 50%;
+    display: flex;
     align-items: center;
 
     .price {

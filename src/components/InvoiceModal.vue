@@ -6,9 +6,10 @@
       >
         <form @submit.prevent="submitForm" class="invoice-content">
           <Loading v-show="loading" />
-          <h1 v-if="!invoiceStore.editInvoice">New Invoice</h1>
-          <h1 v-else>Edit Invoice</h1>
-
+          <div class="flex">
+            <h1 v-if="!invoiceStore.editInvoice">New Invoice</h1>
+                <h1 v-else>Edit Invoice</h1>
+          </div>
           <!-- bill from -->
           <div class="bill-form flex flex-column">
             <h4>Bill Form</h4>
@@ -243,28 +244,28 @@ const route = useRoute();
 const loading = ref(false);
 
 const inputData = ref<InvoiceData>({
-    id: null,
-    userId: null,
-    billerStreetAddress: null,
-    billerCity: null,
-    billerZipCode: null,
-    billerCountry: null,
-    clientName: null,
-    clientEmail: null,
-    clientStreetAddress: null,
-    clientCity: null,
-    clientZipCode: null,
-    clientCountry: null,
-    invoiceDateUnix: 0,
-    invoiceDate: "",
-    paymentTerms: "",
-    paymentDueDateUnix: 0,
-    paymentDueDate: "",
-    productDescription: null,
-    invoicePending: false,
-    invoiceDraft: false,
-    invoiceItemList: [],
-    invoiceTotal: 0,
+  id: null,
+  userId: null,
+  billerStreetAddress: null,
+  billerCity: null,
+  billerZipCode: null,
+  billerCountry: null,
+  clientName: null,
+  clientEmail: null,
+  clientStreetAddress: null,
+  clientCity: null,
+  clientZipCode: null,
+  clientCountry: null,
+  invoiceDateUnix: 0,
+  invoiceDate: "",
+  paymentTerms: "",
+  paymentDueDateUnix: 0,
+  paymentDueDate: "",
+  productDescription: null,
+  invoicePending: false,
+  invoiceDraft: false,
+  invoiceItemList: [],
+  invoiceTotal: 0,
 });
 
 const dateOptions = ref({ year: "numeric", month: "short", day: "numeric" });
@@ -272,196 +273,196 @@ const dateOptions = ref({ year: "numeric", month: "short", day: "numeric" });
 const invoiceWrap = ref(null);
 
 const checkClick = (event: Event) => {
-    if (event.target === invoiceWrap.value) {
-        invoiceStore.isModalActive = !invoiceStore.isModalActive;
-    }
+  if (event.target === invoiceWrap.value) {
+    invoiceStore.isModalActive = !invoiceStore.isModalActive;
+  }
 };
 
 const calcInvoiceTotal = () => {
-    inputData.value.invoiceTotal = 0;
-    inputData.value.invoiceItemList.forEach((item) => {
-        inputData.value.invoiceTotal += item.total;
-    });
+  inputData.value.invoiceTotal = 0;
+  inputData.value.invoiceItemList.forEach((item) => {
+    inputData.value.invoiceTotal += item.total;
+  });
 };
 
 const uploadInvoice = async () => {
-    if (inputData.value.invoiceItemList.length <= 0) {
-        alert("Please ensure you filled out work items");
-        return;
-    }
+  if (inputData.value.invoiceItemList.length <= 0) {
+    alert("Please ensure you filled out work items");
+    return;
+  }
 
-    loading.value = true;
+  loading.value = true;
 
-    calcInvoiceTotal();
+  calcInvoiceTotal();
 
-    const noteBy = auth.currentUser?.uid;
+  const noteBy = auth.currentUser?.uid;
 
-    const dataBase = await addDoc(collection(db, "invoices"), {
-        id: uid(6),
-        userId: noteBy,
-        billerStreetAddress: inputData.value.billerStreetAddress,
-        billerCity: inputData.value.billerCity,
-        billerZipCode: inputData.value.billerZipCode,
-        billerCountry: inputData.value.billerCountry,
-        clientName: inputData.value.clientName,
-        clientEmail: inputData.value.clientEmail,
-        clientStreetAddress: inputData.value.clientStreetAddress,
-        clientCity: inputData.value.clientCity,
-        clientZipCode: inputData.value.clientZipCode,
-        clientCountry: inputData.value.clientCountry,
-        invoiceDateUnix: inputData.value.invoiceDateUnix,
-        invoiceDate: inputData.value.invoiceDate,
-        paymentTerms: inputData.value.paymentTerms,
-        paymentDueDateUnix: inputData.value.paymentDueDateUnix,
-        paymentDueDate: inputData.value.paymentDueDate,
-        productDescription: inputData.value.productDescription,
-        invoicePending: inputData.value.invoicePending,
-        invoiceDraft: inputData.value.invoiceDraft,
-        invoiceItemList: inputData.value.invoiceItemList,
-        invoiceTotal: inputData.value.invoiceTotal,
-        invoicePaid: null,
-    });
+  const dataBase = await addDoc(collection(db, "invoices"), {
+    id: uid(6),
+    userId: noteBy,
+    billerStreetAddress: inputData.value.billerStreetAddress,
+    billerCity: inputData.value.billerCity,
+    billerZipCode: inputData.value.billerZipCode,
+    billerCountry: inputData.value.billerCountry,
+    clientName: inputData.value.clientName,
+    clientEmail: inputData.value.clientEmail,
+    clientStreetAddress: inputData.value.clientStreetAddress,
+    clientCity: inputData.value.clientCity,
+    clientZipCode: inputData.value.clientZipCode,
+    clientCountry: inputData.value.clientCountry,
+    invoiceDateUnix: inputData.value.invoiceDateUnix,
+    invoiceDate: inputData.value.invoiceDate,
+    paymentTerms: inputData.value.paymentTerms,
+    paymentDueDateUnix: inputData.value.paymentDueDateUnix,
+    paymentDueDate: inputData.value.paymentDueDate,
+    productDescription: inputData.value.productDescription,
+    invoicePending: inputData.value.invoicePending,
+    invoiceDraft: inputData.value.invoiceDraft,
+    invoiceItemList: inputData.value.invoiceItemList,
+    invoiceTotal: inputData.value.invoiceTotal,
+    invoicePaid: null,
+  });
 
-    loading.value = false;
+  loading.value = false;
 
-    invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal;
-    invoiceStore.getInvoices(); //consider rewrite
+  invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal;
+  invoiceStore.getInvoices(); //consider rewrite
 };
 
 const updateInvoice = async () => {
-    if (inputData.value.invoiceItemList.length <= 0) {
-        alert("Please ensure you filled out work items");
-        return;
-    }
+  if (inputData.value.invoiceItemList.length <= 0) {
+    alert("Please ensure you filled out work items");
+    return;
+  }
 
-    loading.value = true;
+  loading.value = true;
 
-    calcInvoiceTotal();
+  calcInvoiceTotal();
 
-    const docRefs = doc(db, "invoices", inputData.value.id);
+  const docRefs = doc(db, "invoices", inputData.value.id);
 
-    const dataBase = await updateDoc(docRefs, {
-        billerStreetAddress: inputData.value.billerStreetAddress,
-        billerCity: inputData.value.billerCity,
-        billerZipCode: inputData.value.billerZipCode,
-        billerCountry: inputData.value.billerCountry,
-        clientName: inputData.value.clientName,
-        clientEmail: inputData.value.clientEmail,
-        clientStreetAddress: inputData.value.clientStreetAddress,
-        clientCity: inputData.value.clientCity,
-        clientZipCode: inputData.value.clientZipCode,
-        clientCountry: inputData.value.clientCountry,
-        paymentTerms: inputData.value.paymentTerms,
-        paymentDueDateUnix: inputData.value.paymentDueDateUnix,
-        paymentDueDate: inputData.value.paymentDueDate,
-        productDescription: inputData.value.productDescription,
-        invoiceItemList: inputData.value.invoiceItemList,
-        invoiceTotal: inputData.value.invoiceTotal,
-    });
+  const dataBase = await updateDoc(docRefs, {
+    billerStreetAddress: inputData.value.billerStreetAddress,
+    billerCity: inputData.value.billerCity,
+    billerZipCode: inputData.value.billerZipCode,
+    billerCountry: inputData.value.billerCountry,
+    clientName: inputData.value.clientName,
+    clientEmail: inputData.value.clientEmail,
+    clientStreetAddress: inputData.value.clientStreetAddress,
+    clientCity: inputData.value.clientCity,
+    clientZipCode: inputData.value.clientZipCode,
+    clientCountry: inputData.value.clientCountry,
+    paymentTerms: inputData.value.paymentTerms,
+    paymentDueDateUnix: inputData.value.paymentDueDateUnix,
+    paymentDueDate: inputData.value.paymentDueDate,
+    productDescription: inputData.value.productDescription,
+    invoiceItemList: inputData.value.invoiceItemList,
+    invoiceTotal: inputData.value.invoiceTotal,
+  });
 
-    loading.value = false;
+  loading.value = false;
 
-    const data = {
-        id: inputData.value.id,
-        routeId: route.params.invoiceId,
-    };
+  const data = {
+    id: inputData.value.id,
+    routeId: route.params.invoiceId,
+  };
 
-    invoiceStore.updateInvoice(data);
+  invoiceStore.updateInvoice(data);
 };
 
 const submitForm = () => {
-    if (invoiceStore.editInvoice) {
-        updateInvoice();
-        return;
-    }
-    uploadInvoice();
+  if (invoiceStore.editInvoice) {
+    updateInvoice();
+    return;
+  }
+  uploadInvoice();
 };
 
 const saveDraft = () => {
-    inputData.value.invoiceDraft = true;
+  inputData.value.invoiceDraft = true;
 };
 const publishInvoice = () => {
-    inputData.value.invoicePending = true;
+  inputData.value.invoicePending = true;
 };
 const closeInvoice = () => {
-    invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal;
-    if (invoiceStore.editInvoice) {
-        invoiceStore.editInvoice = !invoiceStore.editInvoice;
-    }
+  invoiceStore.showInvoiceModal = !invoiceStore.showInvoiceModal;
+  if (invoiceStore.editInvoice) {
+    invoiceStore.editInvoice = !invoiceStore.editInvoice;
+  }
 };
 const addNewInvoiceItem = () => {
-    inputData.value.invoiceItemList.push({
-        id: uid(),
-        itemName: "",
-        qty: 0,
-        price: 0,
-        total: 0,
-    });
+  inputData.value.invoiceItemList.push({
+    id: uid(),
+    itemName: "",
+    qty: 0,
+    price: 0,
+    total: 0,
+  });
 };
 const deleteInvoiceItem = (id: string) => {
-    inputData.value.invoiceItemList = inputData.value.invoiceItemList.filter(
-        (item) => item.id !== id
-    );
+  inputData.value.invoiceItemList = inputData.value.invoiceItemList.filter(
+    (item) => item.id !== id
+  );
 };
 
 onMounted(() => {
-    //get current invoice date
-    if (!invoiceStore.editInvoice) {
-        inputData.value.invoiceDateUnix = Date.now();
-        inputData.value.invoiceDate = new Date(
-            inputData.value.invoiceDateUnix
-        ).toLocaleDateString("en-US", dateOptions.value);
-    }
+  //get current invoice date
+  if (!invoiceStore.editInvoice) {
+    inputData.value.invoiceDateUnix = Date.now();
+    inputData.value.invoiceDate = new Date(
+      inputData.value.invoiceDateUnix
+    ).toLocaleDateString("en-US", dateOptions.value);
+  }
 
-    //populate edit invoice modal
-    if (invoiceStore.editInvoice) {
-        const currentInvoice = invoiceStore.currentInvoiceArray[0];
+  //populate edit invoice modal
+  if (invoiceStore.editInvoice) {
+    const currentInvoice = invoiceStore.currentInvoiceArray[0];
 
-        (inputData.value.id = currentInvoice.id),
-            (inputData.value.billerStreetAddress =
-                currentInvoice.billerStreetAddress),
-            (inputData.value.billerCity = currentInvoice.billerCity),
-            (inputData.value.billerZipCode = currentInvoice.billerZipCode),
-            (inputData.value.billerCountry = currentInvoice.billerCountry),
-            (inputData.value.clientName = currentInvoice.clientName),
-            (inputData.value.clientEmail = currentInvoice.clientEmail),
-            (inputData.value.clientStreetAddress =
-                currentInvoice.clientStreetAddress),
-            (inputData.value.clientCity = currentInvoice.clientCity),
-            (inputData.value.clientZipCode = currentInvoice.clientZipCode),
-            (inputData.value.clientCountry = currentInvoice.clientCountry),
-            (inputData.value.invoiceDateUnix = currentInvoice.invoiceDateUnix),
-            (inputData.value.invoiceDate = currentInvoice.invoiceDate),
-            (inputData.value.paymentTerms = currentInvoice.paymentTerms),
-            (inputData.value.paymentDueDateUnix = currentInvoice.paymentDueDateUnix),
-            (inputData.value.paymentDueDate = currentInvoice.paymentDueDate),
-            (inputData.value.productDescription = currentInvoice.productDescription),
-            (inputData.value.invoicePending = currentInvoice.invoicePending),
-            (inputData.value.invoiceDraft = currentInvoice.invoiceDraft),
-            (inputData.value.invoiceItemList = currentInvoice.invoiceItemList),
-            (inputData.value.invoiceTotal = currentInvoice.invoiceTotal);
-    }
+    (inputData.value.id = currentInvoice.id),
+      (inputData.value.billerStreetAddress =
+        currentInvoice.billerStreetAddress),
+      (inputData.value.billerCity = currentInvoice.billerCity),
+      (inputData.value.billerZipCode = currentInvoice.billerZipCode),
+      (inputData.value.billerCountry = currentInvoice.billerCountry),
+      (inputData.value.clientName = currentInvoice.clientName),
+      (inputData.value.clientEmail = currentInvoice.clientEmail),
+      (inputData.value.clientStreetAddress =
+        currentInvoice.clientStreetAddress),
+      (inputData.value.clientCity = currentInvoice.clientCity),
+      (inputData.value.clientZipCode = currentInvoice.clientZipCode),
+      (inputData.value.clientCountry = currentInvoice.clientCountry),
+      (inputData.value.invoiceDateUnix = currentInvoice.invoiceDateUnix),
+      (inputData.value.invoiceDate = currentInvoice.invoiceDate),
+      (inputData.value.paymentTerms = currentInvoice.paymentTerms),
+      (inputData.value.paymentDueDateUnix = currentInvoice.paymentDueDateUnix),
+      (inputData.value.paymentDueDate = currentInvoice.paymentDueDate),
+      (inputData.value.productDescription = currentInvoice.productDescription),
+      (inputData.value.invoicePending = currentInvoice.invoicePending),
+      (inputData.value.invoiceDraft = currentInvoice.invoiceDraft),
+      (inputData.value.invoiceItemList = currentInvoice.invoiceItemList),
+      (inputData.value.invoiceTotal = currentInvoice.invoiceTotal);
+  }
 });
 
 watch(
-    () => inputData.value.paymentTerms,
-    () => {
-        const futureDate = new Date();
-        inputData.value.paymentDueDateUnix = futureDate.setDate(
-            futureDate.getDate() + parseInt(inputData.value.paymentTerms)
-        );
-        inputData.value.paymentDueDate = new Date(
-            inputData.value.paymentDueDateUnix
-        ).toLocaleDateString("en-US", dateOptions.value);
-    }
+  () => inputData.value.paymentTerms,
+  () => {
+    const futureDate = new Date();
+    inputData.value.paymentDueDateUnix = futureDate.setDate(
+      futureDate.getDate() + parseInt(inputData.value.paymentTerms)
+    );
+    inputData.value.paymentDueDate = new Date(
+      inputData.value.paymentDueDateUnix
+    ).toLocaleDateString("en-US", dateOptions.value);
+  }
 );
 
 watch(
-    () => uploadInvoice,
-    () => {
-        invoiceStore.getInvoices();
-    },
-    { deep: true }
+  () => uploadInvoice,
+  () => {
+    invoiceStore.getInvoices();
+  },
+  { deep: true }
 );
 </script>
 
@@ -496,6 +497,7 @@ watch(
     h1 {
       margin-bottom: 48px;
       color: #fff;
+      margin-top:30px;
     }
 
     h3 {
@@ -521,6 +523,14 @@ watch(
         div {
           flex: 1;
         }
+      }
+    }
+    div {
+      justify-content: space-between;
+      .close {
+        color: white;
+        cursor: pointer;
+        background: none;
       }
     }
 

@@ -1,6 +1,5 @@
 <template>
-  <!-- <Register /> -->
-          <div >
+              <div>
     <!-- <div v-if="!mobile" class="app flex flex-column">
       <Navigation />
       <div class="app-content flex flex-column">
@@ -24,32 +23,32 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
-import Navigation from './components/Navigation.vue';
-import Modal from './components/Modal.vue';
-import InvoiceModal from './components/InvoiceModal.vue';
-import { useInvoiceStore } from './stores/index';
-import { auth } from './firebase/fbInit';
-import { useRouter } from 'vue-router';
+import { computed, onMounted } from "vue";
+import Navigation from "./components/Navigation.vue";
+import Modal from "./components/Modal.vue";
+import InvoiceModal from "./components/InvoiceModal.vue";
+import { useInvoiceStore } from "./stores/index";
+import { auth } from "./firebase/fbInit";
+import { useRouter } from "vue-router";
 
-const invoiceStore = useInvoiceStore()
-const router = useRouter()
+const invoiceStore = useInvoiceStore();
+const router = useRouter();
 
 const invoiceLoaded = computed(() => {
-  return invoiceStore.invoicesLoaded
-})
+  return invoiceStore.invoicesLoaded;
+});
 
 onMounted(() => {
   auth.onAuthStateChanged((user) => {
     if (user) {
-      invoiceStore.isLogin = true
-      invoiceStore.getInvoices()
+      invoiceStore.isLogin = true;
+      invoiceStore.getInvoices();
     } else {
-      invoiceStore.isLogin = false
-      router.push({ name: 'Login' })
+      invoiceStore.isLogin = false;
+      router.push({ name: "Login" });
     }
-  })
-})
+  });
+});
 
 //not available on mobile devices
 // const mobile = ref(null)
@@ -67,10 +66,8 @@ onMounted(() => {
 //   checkScreen();
 //   window.addEventListener('resize', checkScreen())
 // })
-
 </script>
 <style lang="scss">
-
 .app {
   background-color: #141625;
   min-height: 100vh;
@@ -113,7 +110,7 @@ onMounted(() => {
 button,
 .button {
   cursor: pointer;
-  padding: 16px 24px;
+  padding: 10px 16px;
   border-radius: 30px;
   border: none;
   font-size: 12px;

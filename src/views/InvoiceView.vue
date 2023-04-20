@@ -5,7 +5,7 @@
       Go Back
     </router-link>
     <!-- header -->
-    <div class="header flex">
+                    <div class="header">
       <div class="left flex">
         <span>Status</span>
         <div
@@ -172,8 +172,6 @@ watch(
       height: 10px;
     }
   }
-
-  .header,
   .invoice-details {
     background-color: #1e2139;
     border-radius: 20px;
@@ -186,6 +184,7 @@ watch(
 
     .left {
       align-items: center;
+      margin-bottom: 15px;
 
       span {
         color: #dfe3fa;
@@ -284,6 +283,9 @@ watch(
 
       .send-to {
         flex: 2;
+        p {
+          font-size: 14px;
+        }
       }
     }
 
